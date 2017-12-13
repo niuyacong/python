@@ -2,6 +2,8 @@
 # 简要：
 # 高阶函数：1、map/reduce 2、filter 3、sorted
 # 返回函数
+# 匿名函数
+# 装饰器
 
 
 # map函数
@@ -316,5 +318,241 @@ print(sorted(students, key=itemgetter(1), reverse=True))# [('Adam', 92), ('Lisa'
 
 
 
-# 返回函数：
+# 返回函数：函数作为返回值
+# 高阶函数除了可以接受函数作为参数外，还可以把函数作为结果值返回。
+# 实现一个可变参数的求和
+def calc_sum(*args):
+    ax=0;
+    for n in args:
+        ax=ax+n;
+    return ax;
+# 但是，如果不需要立刻求和，而是在后面的代码中，根据需要再计算怎么办？可以不返回求和的结果，而是返回求和的函数：
+def lazy_sum(*args):
+    def sum():
+        ax=0;
+        for n in args:
+            ax=ax+n;
+        return ax;
+    return sum;
+
+f=lazy_sum(1,2,3,4);
+print(f);# <function lazy_sum.<locals>.sum at 0x00000000022FBA60>返回的是求和函数
+print(f());# 调用求和函数 10
+
+# 函数lazy_sum中又定义了函数sum，并且，内部函数sum可以引用外部函数lazy_sum的参数和局部变量，
+# 当lazy_sum返回函数sum时，相关参数和变量都保存在返回的函数中，这种称为“闭包（Closure）”的程序结构拥有极大的威力。
+# 调用lazy_sum()时，每次调用都会返回一个新的函数，即使传入相同的参数：
+f1=lazy_sum(1,2,3,4);
+f2=lazy_sum(1,2,3,4);
+print(f1==f2); # False 即使传入相同参数，返回值也是不一样的
+
+# 闭包：
+def count():
+    fs=[];
+    for i in range(1,4):
+        def f():
+            return i*i;
+        fs.append(f);
+    return fs;
+f1,f2,f3=count();
+print(f1())# 9
+print(f2())# 9
+print(f3())# 9
+# 全部都是9！原因就在于返回的函数引用了变量i，但它并非立刻执行。等到3个函数都返回时，它们所引用的变量i已经变成了3，因此最终结果为9。
+# 返回闭包时牢记一点：返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+# 如果一定要引用循环变量怎么办？方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变：
+def count():
+    def f(j):
+        def g():
+            return j*j;
+        return g;
+    fs=[];
+    for i in range(1,4):
+        fs.append(f(i));
+    return fs;
+f1,f2,f3=count();
+print(f1());# 1
+print(f2());# 4
+print(f3());# 9
+# example:利用闭包返回一个计数器函数，每次调用它返回递增整数：
+s = 3 #设置全局变量
+def createCounter():
+    def counter():
+        global s #引用全局变量
+        s = s+1
+        return s
+    return counter
+counterA = createCounter()
+print(counterA()) #每次调用子函数，都是会保留上次s的值进行计算的
+print(counterA())
+
+def createCounter():
+    s = [0]
+    def counter():
+        s[0] = s[0]+1
+        return s[0]
+    return counter
+
+counterA = createCounter()
+print(counterA())
+
+
+
+# 匿名函数
+# 在传入函数时，有些时候，不需要显式地定义函数，直接传入匿名函数更方便。
+print(list(map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9])));# [1, 4, 9, 16, 25, 36, 49, 64, 81]
+# 匿名函数lambda x: x * x实际上就是
+def f(x):
+    return  x*x;
+# 关键字lambda表示匿名函数，冒号前面的x表示函数参数。
+# 匿名函数有个限制，就是只能有一个表达式，不用写return，返回值就是该表达式的结果。
+# 用匿名函数有个好处，因为函数没有名字，不必担心函数名冲突。此外，匿名函数也是一个函数对象，也可以把匿名函数赋值给一个变量，再利用变量来调用该函数：
+f= lambda x:x*x;
+print(f(5));# 55
+# 同样，也可以把匿名函数作为返回值返回
+def build(x,y):
+    return  lambda:x*x+y*y;
+b=build(1,2);# 返回的是一个函数，需要调用一下显示值
+print(b());# 5
+
+# example :请用匿名函数改造下面的代码：
+def is_odd(n):
+    return n % 2 == 1
+
+L = list(filter(is_odd, range(1, 20)))
+
+print(L);# [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+# 改造：
+S=list(filter(lambda x:x%2==1, range(1, 20)))
+print(S);# [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+
+
+
+# 装饰器
+# 由于函数也是一个对象，而且函数对象可以被赋值给变量，所以，通过变量也能调用该函数。
+def now():
+    print('2015-2-3');
+f=now;
+f();# 2015-2-3
+# 函数对象有一个__name__属性，可以拿到函数的名字
+print(now.__name__)# now
+print(f.__name__)# now
+# 现在，假设我们要增强now()函数的功能，
+# 比如，在函数调用前后自动打印日志，
+# 但又不希望修改now()函数的定义，这种在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）。
+#decorator就是一个返回函数的高阶函数。所以，我们要定义一个能打印日志的decorator，可以定义如下：
+def log(func):
+    def wrapper(*args,**kw):
+        print('call %s():'% func.__name__);
+        return func(*args,**kw);
+    return wrapper;
+# 上面的log，因为它是一个decorator，所以接受一个函数作为参数，并返回一个函数。我们要借助Python的@语法，把decorator置于函数的定义处：
+@log
+def now():
+    print('2013-2-3');
+now();
+# call now():
+# 2013-2-3
+# 把@log放到now()函数的定义处，相当于执行了语句：now = log(now)
+
+#　如果decorator本身需要传入参数，那就需要编写一个返回decorator的高阶函数，写出来会更复杂。比如，要自定义log的文本：
+def log(text):
+    def decorator(func):
+        def wrapper(*args,**kw):
+            print('%s %s():'%(text,func.__name__));
+            return func(*args,**kw);
+        return wrapper;
+    return decorator;
+
+@log('execute')
+def now():
+    print('2015-3-25')
+
+now();
+# execute now():
+# 2015-3-25
+# 3层嵌套的效果是这样的：log('execute')(now())
+
+# 剖析上面的语句，首先执行log('execute')，返回的是decorator函数，再调用返回的函数，参数是now函数，返回值最终是wrapper函数。
+
+# 以上两种decorator的定义都没有问题，但还差最后一步。因为我们讲了函数也是对象，它有__name__等属性，
+# 但你去看经过decorator装饰之后的函数，它们的__name__已经从原来的'now'变成了'wrapper'：
+print(now.__name__);# wrapper
+
+# 因为返回的那个wrapper()函数名字就是'wrapper'，所以，需要把原始函数的__name__等属性复制到wrapper()函数中，否则，有些依赖函数签名的代码执行就会出错。
+#
+# 不需要编写wrapper.__name__ = func.__name__这样的代码，Python内置的functools.wraps就是干这个事的
+
+import functools
+def log(func):
+    # @functools.wraps(func)
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
+@log
+def now():
+    print('2013-2-3');
+now();
+print(now.__name__)
+
+# 带参数的decorator
+import functools;
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args,**kw):
+            print('%s %s ():'% (text,func.__name__));
+            return func(*args,**kw);
+        return wrapper;
+    return decorator;
+@log('execcute')
+def now():
+    print('2045-22-33');
+now();
+print(now.__name__);
+# execcute now ():
+# 2045-22-33
+# now
+
+# 设计一个decorator，它可作用于任何函数上，并打印该函数的执行时间：
+import  time,functools
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args,**kw):
+        startime=time.time()
+        print('%s start time: %s' % (func.__name__,startime))
+        func(*args,**kw);
+        endtime=time.time()
+        print('%s end time :%s' % (func.__name__,endtime))
+        print('%s execute time:%s'% (func.__name__,str(endtime-startime)))
+        return func(*args,**kw);
+    return wrapper;
+@log
+def fast(x, y):
+    time.sleep(0.0012)
+    return x + y;
+print(fast(1,22));
+# 测试
+@log
+def fast(x, y):
+    time.sleep(0.0012)
+    return x + y;
+
+@log
+def slow(x, y, z):
+    time.sleep(0.1234)
+    return x * y * z;
+
+f = fast(11, 22)
+s = slow(11, 22, 33)
+if f != 33:
+    print('测试失败!')
+elif s != 7986:
+    print('测试失败!')
+else:
+    print('测试成功')
+
+
+
 
