@@ -1,12 +1,14 @@
 # user:nyc
 # time:2017-12-13
 # 模块(以下为标准注释)
+# 使用模块，安装第三方模块
 
 #!/usr/bin/env python3  (这个注释可以让这个hello.py文件直接在Unix/Linux/Mac上运行)
 # -*- coding: utf-8 -*-  （表示.py文件本身使用标准UTF-8编码）
 
 'a test module'   # 一个字符串，表示模块的文档注释，任何模块代码的第一个字符串都被视为模块的文档注释；
 __author__ = 'nyc'  # 使用__author__变量把作者写进去，这样当你公开源代码后别人就可以瞻仰你的大名；
+
 
 # 使用模块
 # 以内建的sys模块为例，编写一个hello的模块：
@@ -68,6 +70,35 @@ def greeting(name):
 # 这也是一种非常有用的代码封装和抽象的方法，即：
 #
 # 外部不需要引用的函数全部定义成private，只有外部需要引用的函数才定义为public。
+
+
+
+# 导入第三方模块
+#  file -- setting -- project: python --project interpreter --添加（+）
+
+# 安装常用模块
+#
+# 在使用Python时，我们经常需要用到很多第三方库，例如，上面提到的Pillow，以及MySQL驱动程序，Web框架Flask，科学计算Numpy等。用pip一个一个安装费时费力，还需要考虑兼容性。我们推荐直接使用Anaconda，这是一个基于Python的数据处理和科学计算平台，它已经内置了许多非常有用的第三方库，我们装上Anaconda，就相当于把数十个第三方模块自动安装好了，非常简单易用。
+#
+# 可以从Anaconda官网下载GUI安装包，安装包有500~600M，所以需要耐心等待下载。网速慢的同学请移步国内镜像。下载后直接安装，Anaconda会把系统Path中的python指向自己自带的Python，并且，Anaconda安装的第三方模块会安装在Anaconda自己的路径下，不影响系统已安装的Python目录。
+#
+# 安装好Anaconda后，重新打开命令行窗口，输入python，可以看到Anaconda的信息：
+
+
+
+# 模块搜索路径
+#
+# 当我们试图加载一个模块时，Python会在指定的路径下搜索对应的.py文件，如果找不到，就会报错：
+# 默认情况下，Python解释器会搜索当前目录、所有已安装的内置模块和第三方模块，搜索路径存放在sys模块的path变量中：
+# 如果我们要添加自己的搜索目录，有两种方法：
+#
+# 一是直接修改sys.path，添加要搜索的目录：
+# >>> import sys
+#>>> sys.path.append('/Users/michael/my_py_scripts')
+# 这种方法是在运行时修改，运行结束后失效。
+# 第二种方法是设置环境变量PYTHONPATH，该环境变量的内容会被自动添加到模块搜索路径中。
+# 设置方式与设置Path环境变量类似。注意只需要添加你自己的搜索路径，Python自己本身的搜索路径不受影响。
+
 
 
 
