@@ -93,6 +93,61 @@ bar.get_grade();# A
 #
 # 和静态语言不同，Python允许对实例变量绑定任何数据，也就是说，对于两个实例变量，虽然它们都是同一个类的不同实例，但拥有的变量名称都可能不同：
 
+# 访问限制
+# 如果要让内部属性不被外部访问，可以把属性的名称前加上两个下划线__，
+# 在Python中，实例的变量名如果以__开头，就变成了一个私有变量（private），只有内部可以访问，外部不能访问，所以，我们把Student类改一改：
+class Student():
+    def __init__(self,name,score):
+        self.__name=name;
+        self.__score=score;
+    def print_score(self):
+        print('%s : %s'%(self.__name,self.__score));
+
+bar = Student('nyc',100);
+# bar.name;# AttributeError: 'Student' object has no attribute 'name'
+bar.print_score();# nyc : 100
+# 如果外部代码要获取name和score怎么办？可以给Student类增加get_name和get_score这样的方法：
+class Student():
+    def __init__(self,name,score):
+        self.__name=name;
+        self.__score=score;
+    def print_score(self):
+        print('%s : %s'%(self.__name,self.__score));
+    def get_name(self):
+        return self.__name;
+    def set_name(self,names):
+        self.__name=names;
+bar = Student('nyc',100);
+print(bar.get_name());# nyc
+bar.set_name('yc');
+print(bar.get_name());# yc
+
+# 原先那种直接通过bart.score = 99也可以修改啊，为什么要定义一个方法大费周折？因为在方法中，可以对参数做检查，避免传入无效的参数：
+# example:
+class Student():
+    def __init__(self,name,score):
+        self.__name=name;
+        self.__score=score;
+    def print_score(self):
+        print('%s : %s'%(self.__name,self.__score));
+    def get_name(self):
+        return self.__name;
+    def set_name(self,names):
+        if len(names)<3 or len(names)>4:
+            print('name is error')
+        else:
+            self.__name = names;
+
+bar = Student('nyc',100);
+print(bar.get_name());# nyc
+bar.set_name('yc'); # name is error
+print(bar.get_name());# nyc
+
+# 有些时候，你会看到以一个下划线开头的实例变量名，比如_name，这样的实例变量外部是可以访问的，但是，按照约定俗成的规定，当你看到这样的变量时，意思就是，“虽然我可以被访问，但是，请把我视为私有变量，不要随意访问”。
+#
+# 双下划线开头的实例变量是不是一定不能从外部访问呢？其实也不是。不能直接访问__name是因为Python解释器对外把__name变量改成了_Student__name，所以，仍然可以通过_Student__name来访问__name变量：
+print(bar._Student__name);# nyc
+# 但是强烈建议你不要这么干，因为不同版本的Python解释器可能会把__name改成不同的变量名。
 
 
 
