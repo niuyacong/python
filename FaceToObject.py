@@ -6,7 +6,10 @@ __author__ = 'nyc'
 
 # 面向对象编程
 # 类和实例(类、封装)
-#
+# 访问限制（私有变量）
+# 继承和多态
+# 获取对象信息
+# 实例属性和类属性
 
 # 类和实例
 #
@@ -148,6 +151,265 @@ print(bar.get_name());# nyc
 # 双下划线开头的实例变量是不是一定不能从外部访问呢？其实也不是。不能直接访问__name是因为Python解释器对外把__name变量改成了_Student__name，所以，仍然可以通过_Student__name来访问__name变量：
 print(bar._Student__name);# nyc
 # 但是强烈建议你不要这么干，因为不同版本的Python解释器可能会把__name改成不同的变量名。
+# 错误写法：
+bar = Student('nyc',100);
+bar.get_name();# nyc
+bar.__name='text';
+print(bar.__name);# text
+print(bar.get_name())# nyc
+# 并没有如期打印出text,而是返回初始化的nyc
+# 外部代码“成功”地设置了__name变量，但实际上这个__name变量和class内部的__name变量不是一个变量！
+# 内部的__name变量已经被Python解释器自动改成了_Student__name，而外部代码给bart新增了一个__name变量
+
+
+
+
+
+
+# 继承和多态
+# 编写了一个名为Animal的class，有一个run()方法可以直接打印：
+class Animal(object):
+    def run(self):
+        print('Animal is running...');
+# 需要编写Dog和Cat类时，就可以直接从Animal类继承：
+class Dog(Animal):
+    pass;
+class Cat(Animal):
+    pass
+# 对于Dog来说，Animal就是它的父类，对于Animal来说，Dog就是它的子类。Cat和Dog类似。
+# 继承有什么好处？
+# 最大的好处是子类获得了父类的全部功能。由于Animial实现了run()方法，因此，Dog和Cat作为它的子类，什么事也没干，就自动拥有了run()方法：
+dog=Dog();
+dog.run();# Animal is running...
+# 也可以对子类增加一些方法，比如Dog类：
+class Dog(Animal):
+    def run(self):
+        print('Dog is running...');
+    def eat(self):
+        print('Eating meet...');
+dog=Dog();
+dog.run();# Dog is running...
+dog.eat();# Eating meet...
+# 继承的第二个好处需要我们对代码做一点改进。你看到了，无论是Dog还是Cat，它们run()的时候，显示的都是Animal is running...，符合逻辑的做法是分别显示Dog is running...和Cat is running...，因此，对Dog和Cat类改进如下：
+class Dog(Animal):
+
+    def run(self):
+        print('Dog is running...')
+
+class Cat(Animal):
+
+    def run(self):
+        print('Cat is running...')
+# 当子类和父类都存在相同的run()方法时，我们说，子类的run()覆盖了父类的run()，
+# 在代码运行的时候，总是会调用子类的run()。这样，我们就获得了继承的另一个好处：多态。
+#
+# 要理解什么是多态，我们首先要对数据类型再作一点说明。当我们定义一个class的时候，我们实际上就定义了一种数据类型。
+# 我们定义的数据类型和Python自带的数据类型，比如str、list、dict没什么两样：
+a=list();
+b=Dog();
+c=Animal();
+# 判断一个变量是否是某个类型可以用isinstance()判断：
+print(isinstance(a,list))# True
+print(isinstance(b,Dog))# True
+print(isinstance(c,Animal));# True
+print(isinstance(b,Animal)); # True  b不仅仅是Dog,还是Animal
+# 如果一个实例的数据类型是某个子类，那它的数据类型也可以被看做是父类。但是，反过来就不行：
+print(isinstance(c,Dog))# False
+# Dog可以看成Animal，但Animal不可以看成Dog。
+#
+# 要理解多态的好处，我们还需要再编写一个函数，这个函数接受一个Animal类型的变量：
+def run_twice(Animal):
+    Animal.run();
+    Animal.run();
+# 传入Animal的实例
+run_twice(Animal())
+# Animal is running...
+# Animal is running...
+# 传入Dog的实例：
+run_twice(Dog())
+# Dog is running...
+# Dog is running...
+# 新增一个Animal的子类，不必对run_twice()做任何修改，
+# 实际上，任何依赖Animal作为参数的函数或者方法都可以不加修改地正常运行，原因就在于多态。
+# 多态的好处就是，当我们需要传入Dog、Cat、Tortoise……时，我们只需要接收Animal类型就可以了，因为Dog、Cat、Tortoise……都是Animal类型，然后，按照Animal类型进行操作即可。由于Animal类型有run()方法，因此，传入的任意类型，只要是Animal类或者子类，就会自动调用实际类型的run()方法，这就是多态的意思：
+#
+# 对于一个变量，我们只需要知道它是Animal类型，无需确切地知道它的子类型，就可以放心地调用run()方法，而具体调用的run()方法是作用在Animal、Dog、Cat还是Tortoise对象上，由运行时该对象的确切类型决定，这就是多态真正的威力：调用方只管调用，不管细节，而当我们新增一种Animal的子类时，只要确保run()方法编写正确，不用管原来的代码是如何调用的。这就是著名的“开闭”原则：
+#
+# 对扩展开放：允许新增Animal子类；
+#
+# 对修改封闭：不需要修改依赖Animal类型的run_twice()等函数。
+#
+# 继承还可以一级一级地继承下来，就好比从爷爷到爸爸、再到儿子这样的关系。而任何类，最终都可以追溯到根类object
+#
+#
+#
+#
+#
+# 静态语言 vs 动态语言
+#
+# 对于静态语言（例如Java）来说，如果需要传入Animal类型，则传入的对象必须是Animal类型或者它的子类，否则，将无法调用run()方法。
+#
+# 对于Python这样的动态语言来说，则不一定需要传入Animal类型。我们只需要保证传入的对象有一个run()方法就可以了：
+class Timer(object):
+    def run(self):
+        print('time is lose');
+run_twice(Timer())
+# time is lose
+# time is lose
+# Timer也可以调用run_twice方法，但是不必继承于Animal,Timer有run方法，像Animal就可以了,这就是动态语言的特点
+#
+# 这就是动态语言的“鸭子类型”，它并不要求严格的继承体系，一个对象只要“看起来像鸭子，走起路来像鸭子”，那它就可以被看做是鸭子。
+
+# Python的“file-like object“就是一种鸭子类型。对真正的文件对象，它有一个read()方法，返回其内容。
+# 但是，许多对象，只要有read()方法，都被视为“file-like object“。许多函数接收的参数就是“file-like object“，
+# 你不一定要传入真正的文件对象，完全可以传入任何实现了read()方法的对象。
+#
+# 继承可以把父类的所有功能都直接拿过来，这样就不必重零做起，子类只需要新增自己特有的方法，也可以把父类不适合的方法覆盖重写。
+#
+# 动态语言的鸭子类型特点决定了继承不像静态语言那样是必须的。
+#
+#
+#
+#
+#
+#
+# 获取对象信息
+# 拿到一个对象的引用时，如何知道这个对象是什么类型、有哪些方法呢？
+# 判断对象类型，使用type()函数：
+print(type(123))    #<class 'int'>
+print(type('123'))  #<class 'str'>
+print(type(1.12))   #<class 'float'>
+print(type([1,2,4]))# <class 'list'>
+# 如果一个变量指向函数或者类，也可以用type()判断
+print(type(run_twice)); # <class 'function'> type 里面只放名字，不加调用的括号（）
+b=Dog();
+c=Animal()
+print(type(b)); # <class '__main__.Dog'>
+print(type(c)); # <class '__main__.Animal'>
+print(type(abs)) # abs:绝对值函数，<class 'builtin_function_or_method'>
+# 在if语句中判断，就需要比较两个变量的type类型是否相同：
+print(type(123)==type(234)); # True
+print(type('123')==type(123)) # False
+print(type('123')==str) # True
+#
+# 判断基本数据类型可以直接写int，str等，但如果要判断一个对象是否是函数怎么办？可以使用types模块中定义的常量：
+import types;
+def fn():
+    pass;
+print(type(fn)==types.FunctionType);# True
+print(type(abs)==types.BuiltinFunctionType);# True
+print(type(lambda x:x)==types.LambdaType);# True
+print(type((x for x in range(1,10)))==types.GeneratorType)# True
+#
+# 使用isinstance()
+#
+# 对于class的继承关系来说，使用type()就很不方便。我们要判断class的类型，可以使用isinstance()函数。
+# 如果继承关系是：object -> Animal -> Dog
+print('isinstance');
+a=Animal();
+b=Dog();
+print(isinstance(b,Dog));# True
+print(isinstance(b,Animal));# True
+# 能用type()判断的基本类型也可以用isinstance()判断：
+print(isinstance('a',str))# True
+print(isinstance(b'a',bytes));# True
+# 并且还可以判断一个变量是否是某些类型中的一种，比如下面的代码就可以判断是否是list或者tuple：
+print('1');
+print(isinstance([1,2,3,4],(list,tuple))) #True
+print(isinstance((1,2,3,4),(list,tuple)))# True　
+# !!! 总是优先使用isinstance()判断类型，可以将指定类型及其子类“一网打尽”。
+#
+# 使用dir()
+#
+# 如果要获得一个对象的所有属性和方法，可以使用dir()函数，它返回一个包含字符串的list，比如，获得一个str对象的所有属性和方法：
+print(dir('ABC'))
+#　['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index', 'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'maketrans', 'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
+print(dir(Animal));
+# ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'run']
+# 类似__xxx__的属性和方法在Python中都是有特殊用途的，比如__len__方法返回长度。在Python中，如果你调用len()函数试图获取一个对象的长度，
+# 实际上，在len()函数内部，它自动去调用该对象的__len__()方法，所以，下面的代码是等价的：
+print(len('ABC'));      # 3
+print('ABC'.__len__()); # 3
+#我们自己写的类，如果也想用len(myObj)的话，就自己写一个__len__()方法：
+class MyDog():
+    def __len__(self):
+        return 100;
+dog=MyDog();
+print(len(dog));# 100
+# 剩下的都是普通属性或方法，比如lower()返回小写的字符串：
+print('ABC'.lower()); # abc
+# 仅仅把属性和方法列出来是不够的，配合getattr()、setattr()以及hasattr()，我们可以直接操作一个对象的状态：
+class Myobject():
+    def __init__(self):
+        self.x=9;
+    def power(self):
+        return self.x*self.x;
+obj=Myobject();
+print(hasattr(obj,'x')); #　True
+print(obj.x);# 9
+setattr(obj,'y',10);
+print(hasattr(obj,'y'));#True
+print(getattr(obj,'y')) # 10
+print(getattr(obj,'z',-1));#　如果不存在的属性会报错，可以附加默认值，直接返回默认值
+# 也可以获得对象的方法：
+print(hasattr(obj,'power')) # True
+print(getattr(obj,'power')) # <bound method Myobject.power of <__main__.Myobject object at 0x0000000002853278>>
+fn = getattr(obj, 'power') # 获取属性'power'并赋值到变量fn
+fn # fn指向obj.power
+# <bound method MyObject.power of <__main__.MyObject object at 0x10077a6a0>>
+fn() # 调用fn()与调用obj.power()是一样的   81
+#
+#
+# 通过内置的一系列函数，我们可以对任意一个Python对象进行剖析，拿到其内部的数据。
+# 要注意的是，只有在不知道对象信息的时候，我们才会去获取对象信息。如果可以直接写：
+# sum = obj.x + obj.y
+# 就不要写：
+# sum = getattr(obj, 'x') + getattr(obj, 'y')
+# 一个正确的用法的例子如下：
+def ReadImage(fp):
+    if hasattr(fp,'read'):
+        return readData(fp);
+    return  None;
+def readData():
+    pass;
+# 假设我们希望从文件流fp中读取图像，我们首先要判断该fp对象是否存在read方法，如果存在，则该对象是一个流，如果不存在，则无法读取。
+# hasattr()就派上了用场。
+
+# 请注意，在Python这类动态语言中，根据鸭子类型，有read()方法，不代表该fp对象就是一个文件流，它也可能是网络流，
+# 也可能是内存中的一个字节流，但只要read()方法返回的是有效的图像数据，就不影响读取图像的功能。
+#
+#
+#
+#
+#
+#
+# 实例属性和类属性
+# 由于Python是动态语言，根据类创建的实例可以任意绑定属性。
+#
+# 给实例绑定属性的方法是通过实例变量，或者通过self变量：
+class Student(object):
+    def __init__(self,name):
+        self.name=name;
+s=Student('Bob');
+s.score=10;
+# 但是，如果Student类本身需要绑定一个属性呢？可以直接在class中定义属性，这种属性是类属性，归Student类所有：
+class Student(object):
+    name="Student";
+s=Student();
+# 当我们定义了一个类属性后，这个属性虽然归类所有，但类的所有实例都可以访问到
+print(s.name); # Student
+print(Student.name) # Student
+s.name='test';
+print(s.name);  # test
+print(Student.name)# Student
+
+
+
+
+
+
+
+
 
 
 
