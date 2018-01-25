@@ -9,7 +9,7 @@ __author__ = 'nyc'
 # @property
 # 多重继承
 # 定制类(__str__、__repr__、__iter__、__getitem__、__getattr__、__call__)
-
+# 枚举类
 
 # __slots__
 # 正常情况下，当我们定义了一个class，创建了一个class的实例后，我们可以给该实例绑定任何属性和方法，这就是动态语言的灵活性
@@ -352,11 +352,91 @@ print(callable(max)); # True
 print(callable([1,2,3])) # False
 print(callable(None)); # False
 print(callable('str')); # False
+#
+#
+#
+# 使用枚举类
+#当我们需要定义常量时，一个办法是用大写变量通过整数来定义，例如月份：
+JAN = 1
+FEB = 2
+MAR = 3
+NOV = 11
+DEC = 12
+# 好处是简单，缺点是类型是int，并且仍然是变量。
+#
+# 更好的方法是为这样的枚举类型定义一个class类型，然后，每个常量都是class的一个唯一实例。Python提供了Enum类来实现这个功能：
+from enum import Enum
+Month=Enum('Month',('Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+# 这样我们就获得了Month类型的枚举类，可以直接使用Month.Jan来引用一个常量，或者枚举它的所有成员：
+for name,member in Month._member_map_.items():
+    print(name,'=>',member,',',member.value);
+# print like this:
+# Jan => Month.Jan , 1
+# Feb => Month.Feb , 2
+# Mar => Month.Mar , 3
+# Apr => Month.Apr , 4
+# May => Month.May , 5
+# Jun => Month.Jun , 6
+# Jul => Month.Jul , 7
+# Aug => Month.Aug , 8
+# Sep => Month.Sep , 9
+# Oct => Month.Oct , 10
+# Nov => Month.Nov , 11
+# Dec => Month.Dec , 12
+# value属性则是自动赋给成员的int常量，默认从1开始计数。
+# 如果需要更精确地控制枚举类型，可以从Enum派生出自定义类：
+from enum import Enum,unique
 
+@unique
+class Weekday(Enum):
+    Sun=0  # Sun的value被设定为0
+    Mon=1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+# @unique装饰器可以帮助我们检查保证没有重复值。
+#
+# 访问这些枚举类型可以有若干种方法：
+#
+print(Weekday.Mon);      # Weekday.Mon
+#
+print(Weekday['Tue']);  # Weekday.Tue
+#
+print(Weekday.Mon.value); # 1
+#
+day1=Weekday.Mon;
+print( day1==Weekday.Mon ); # True
+#
+print(Weekday(1))       # Weekday.Mon
+for name,member in Weekday.__members__.items():
+    print(name,'=>',member,member.value);
+# Sun => Weekday.Sun 0
+# Mon => Weekday.Mon 1
+# Tue => Weekday.Tue 2
+# Wed => Weekday.Wed 3
+# Thu => Weekday.Thu 4
+# Fri => Weekday.Fri 5
+# Sat => Weekday.Sat 6
 
+# 把Student的gender属性改造为枚举类型，可以避免使用字符串：
 
-
-
+class Student(object):
+    def __init__(self,age,gender):
+        self.age=age;
+        self.gender=gender;
+@unique
+class Gender(Enum):
+    Male=0;
+    FeMale=1;
+# 测试:
+bart = Student('Bart', Gender.Male)
+if bart.gender == Gender.Male:
+    print('测试通过!')
+else:
+    print('测试失败!')
+# Enum可以把一组相关常量定义在一个class中，且class不可变，而且成员可以直接比较。
 
 
 
