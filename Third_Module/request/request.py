@@ -86,7 +86,17 @@ print(r.headers["Date"])# Tue, 27 Feb 2018 02:44:03 GMT
 
 # 要在请求中传入Cookie，只需准备一个dict传入cookies参数：
 cs = {'token': '12345', 'status': 'working'}
-r = requests.get("", cookies=cs)
+# r = requests.get("", cookies=cs)
 
 # 最后，要指定超时，传入以秒为单位的timeout参数：
-r = requests.get("", timeout=2.5) # 2.5秒后超时
+# r = requests.get("", timeout=2.5) # 2.5秒后超时
+
+print("-----------分割线-----")
+header={'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257 MicroMessenger/6.5.2.501 NetType/WIFI '}
+r=requests.get("http://misc.foodszs.cn/funny/yancao/2017/huadeng/scripts/rain.js");
+# print(r.status_code)
+# print(r.text)
+import base64
+print(r.status_code)
+print(r.text)
+
