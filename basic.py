@@ -15,7 +15,7 @@ print(1.2e-5 * 10);
 
 # 转义字符 \
 # r''表示''内部的字符串默认不转义,但是这样就不管用了 ex:print(r' I'm a "smart" girl ');
-# \n表示换行，\t表示制表符，字符\本身也要转义，所以\\表示的字符就是\
+# \n表示换行，\t表示制表符，字符\本身也要转义，所以\\表示的字符就是\  \r回车
 # 有很多换行，用\n写在一行里不好阅读，为了简化，Python允许用'''...'''的格式表示多行内容
 
 print(" I'm a \"smart\"girl");
@@ -26,7 +26,7 @@ line2
 line3''');
 
 
-# 布尔值
+# 布尔值Ture False 区分大小写
 # and
 print(True and False);
 # or
@@ -34,6 +34,16 @@ print(2>3 or 3>4);
 # not
 print(not True);
 print(not 2>3);
+
+#很多类型都可以和boolean进行转换
+print(int(True)) #1
+print(int(False))#0
+
+print(bool(1))#True
+print(bool(0))#False
+
+#复数  数字+j
+36j
 
 # 空值，用 NULL表示，不能用0表示
 
@@ -47,6 +57,19 @@ print(9/3);# 3.0
 
 # 地板除：两个整数相除结果仍然是整数
 print(10//3);# 3
+
+#二进制、十进制、八进制、十六进制
+#二进制 0b开头  八进制0o开头  十六进制 0x开头
+0b10 # 2
+0o10 #8
+0x10 #16
+#转换成二进制
+bin(0x10)
+#转换成十进制
+int(0b10)
+#转换成十六进制hex()
+#转换成八进制oct()
+
 
 # 字符串
 # 1、对于单个字符的编码，ord()函数获取字符的整数表示，chr()函数把编码转换为对应的字符
@@ -79,6 +102,17 @@ print( len('中文'.encode('utf-8'))); # 6
 # 。如果只有一个%?，括号可以省略
 print( 'Hello, %s' % 'world');
 print('hi ,%s ,you have $%d'%('niu',100));
+
+#字符串运算
+'hello'+' world' #hello world
+'hello'*3 #'hellohellohello'
+'hello'[1]#e
+'hello'[-1]#o
+'hello'[0:4]#'hell'
+'hello'[0:-1]#'hell'
+'hello'[0:20]#'hello'
+'hello'[2:]#'llo'
+'hello'[:-1]#'hell'
 
 # list
 newlist=['Michael', 'Bob', 'Tracy'];
