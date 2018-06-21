@@ -115,10 +115,13 @@ print('hi ,%s ,you have $%d'%('niu',100));
 'hello'[:-1]#'hell'
 
 # list
+#支持切片操作[n:m]、[n]、+
+print([1]+[2,3])#[1,2,3]
 newlist=['Michael', 'Bob', 'Tracy'];
 print(len(newlist));# 数组newlist的长度
 print(newlist[0]);# Michael
 print(newlist[-1]);# Tracy 索引为-1，取的是最后一个值 -2 -3 -4 以此类推
+print(newlist[0:2])#['Michael', 'Bob']得到的结果还是list   
 newlist.append("hello");# 追加元素到末尾
 print(newlist); # ['Michael', 'Bob', 'Tracy', 'hello']
 newlist.insert(1,"aaa"); # 插入元素到索引为1的位置
@@ -140,6 +143,9 @@ print(len(a)); # 0
 
 
 # tuple 有序列表  一旦初始化就不能修改（长度等均不可修改），列表中元素指向一个list ,元素还是指向list是不可变得，但是list中的元素可变
+#支持切片操作、+、*
+print((1,2)+(3,4))#(1,2,3,4)
+print((1,2)*2)#(1,2,1,2)
 classmates = ('Michael', 'Bob', 'Tracy');
 print(classmates); # ('Michael', 'Bob', 'Tracy')
 print(classmates[0]); # Michael
@@ -287,8 +293,12 @@ print(s); #{1, 2, 3}
 # set可以看成数学意义上的无序和无重复元素的集合，因此，两个set可以做数学意义上的交集、并集等操作：
 s1=set([1,2,3,4]);
 s2=set([0,1,2,5]);
+s3=set([1,2])
 print(s1&s2); #{1, 2}
 print(s1|s2);#{0, 1, 2, 3, 4, 5}
+print(s1-s3)#{1,2}
+#定义空集合
+set()
 
 # set和dict的唯一区别仅在于没有存储对应的value，但是，set的原理和dict一样，
 # 所以，同样不可以放入可变对象，因为无法判断两个可变对象是否相等，也就无法保证set内部“不会有重复元素”。
