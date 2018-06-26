@@ -26,6 +26,9 @@ line2
 line3''');
 
 
+#切片
+a[0:4:2]#最后一个参数是步长，每隔2个取一次
+
 # 布尔值Ture False 区分大小写
 # and
 print(True and False);
@@ -213,6 +216,11 @@ sum = 0
 for x in range(101):
     sum = sum + x
 print(sum) # 5050
+
+for x in range(100):#range(0,10,2) 2:步长 输出0 2 4 6 8 range(10,0,-2) 输出8 6 4 2 0
+    pass
+else:#for 循环正常执行完，会执行else  循环中有break,不会执行else
+    pass
 # while 条件满足  就会一直执行
 sum = 0
 n = 99
@@ -242,7 +250,11 @@ while n < 10:
     if n % 2 == 0: # 如果n是偶数，执行continue语句
         continue # continue语句会直接继续下一轮循环，后续的print()语句不会执行
     print(n);
-
+    
+while n<10:
+    pass
+else:
+    pass
 # dict 和 set
 # dict即dictionary
 d = {'Michael': 95, 'Bob': 75, 'Tracy': 85};
