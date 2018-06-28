@@ -1,4 +1,15 @@
 #　python 官网函数文档  http://docs.python.org/3/library/functions.html
+
+# 内置函数的命令，在命令行help(函数名称)  help(round)
+
+""" 
+函数功能：
+1、功能性
+2、隐藏细节
+3、避免编写重复的代码
+
+"""
+
 # 绝对值的函数abs
 print(abs(-5)); # 5
 # max() 求最大值函数
@@ -17,7 +28,10 @@ print(bool(0)); # False
 print(bool(1)); # True　
 
 # 定义函数
-
+""" 
+1、参数列表可以没有
+2、没有return 默认返回 return none
+"""
 def my_abs(x):
     if x>0:
         return x;
