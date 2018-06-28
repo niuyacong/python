@@ -3,7 +3,18 @@
 
 'Face To Object'
 __author__ = 'nyc'
+""" 
+类的基本作用：封装代码
+类就是一个模板，可以产生多个不同对象
+类（行为、特征）
 
+实例化类的时候，会执行__init__构造函数，不能返回字符串
+
+局部变量不会覆盖全局变量
+
+构造函数：
+1、初始化对象的属性
+"""
 # 面向对象编程
 # 类和实例(类、封装)
 # 访问限制（私有变量）
@@ -36,7 +47,7 @@ print(bart.name)    # bart simpson
 #
 class Student1():
 
-    def __init__(self,name,score):
+    def __init__(self,name,score):# 构造函数
         self.name=name;
         self.score=score;
 # 注意到__init__方法的第一个参数永远是self，表示创建的实例本身，因此，在__init__方法内部，
