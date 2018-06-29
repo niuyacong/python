@@ -14,16 +14,24 @@ __author__ = 'nyc'
 
 
 类变量、实例变量self.属性
-访问类实例的属性，类.__dict__
+访问类实例的全部属性，类.__dict__
 
 类的方法访问类的属性的两种方法
 类.属性=
 self.__class__.属性=
 
-类方法
+类方法：供类使用
 @classmethod
 def aa(cls):
+    cls.属性  ===类的属性
+
+
+静态方法:类和类的实例都可使用（尽量使用类方法classmethod）
+@staticmethod
+def add(x,y):
     pass
+静态方法访问类方法：类.属性
+
 
 构造函数：
 1、初始化对象的属性
@@ -193,11 +201,18 @@ print(bar.get_name())# nyc
 # 继承和多态
 # 编写了一个名为Animal的class，有一个run()方法可以直接打印：
 class Animal(object):
+    def __init__(self,name,age):
+        pass
     def run(self):
         print('Animal is running...');
 # 需要编写Dog和Cat类时，就可以直接从Animal类继承：
 class Dog(Animal):
-    pass;
+    def __init__(self,schoole,name,age):
+        # Animal.__init__(self,name,age)#实例化的对象可以不传self,self是它本身，调类的方法时，需要传入self
+        # 调用父类方法
+        super(Dog,self).__init__(name,age)
+    def run(self):
+        super(Dog,self).run()
 class Cat(Animal):
     pass
 # 对于Dog来说，Animal就是它的父类，对于Animal来说，Dog就是它的子类。Cat和Dog类似。
