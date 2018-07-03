@@ -22,6 +22,8 @@ __author__ = 'nyc'
     re.I  不区分大小写
 7、函数
     re.sub(正则,函数,字符串); 函数取值value.group(),取字符所在位置 value.span()
+    返回需匹配的字符需加（）
+    group(0) 返回整个字符串  group(1,2,3)返回匹配元组  groups()返回所有匹配元组 
     字符串.replace()
     re.match()从字符串开头开始匹配，不匹配返回None,返回第一个匹配到的字符
     re.search()返回第一个匹配到的字符
