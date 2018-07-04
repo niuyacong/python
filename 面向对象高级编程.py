@@ -371,6 +371,8 @@ DEC = 12
 from enum import Enum
 Month=Enum('Month',('Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
 # 这样我们就获得了Month类型的枚举类，可以直接使用Month.Jan来引用一个常量，或者枚举它的所有成员：
+for v in Month:
+    pass
 for name,member in Month._member_map_.items():
     print(name,'=>',member,',',member.value);
 # print like this:
@@ -394,12 +396,17 @@ from enum import Enum,unique
 class Weekday(Enum):
     Sun=0  # Sun的value被设定为0
     Mon=1
+    Mon_alis=1 #相同于别名
     Tue = 2
     Wed = 3
     Thu = 4
     Fri = 5
     Sat = 6
 # @unique装饰器可以帮助我们检查保证没有重复值。
+
+from enum import IntEnum
+class vip(IntEnum):
+    sun="11" #报错  只能是int类型
 #
 # 访问这些枚举类型可以有若干种方法：
 #

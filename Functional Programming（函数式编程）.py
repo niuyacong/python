@@ -6,17 +6,65 @@
 # 装饰器
 # 偏函数
 
+''' 
+1、闭包：函数+环境变量   变量在函数内是不会变化的，函数内的函数是可以改变此函数的变量的
+    查看函数的环境变量(函数定义时的外部变量)
+    函数.__closure__
+    查看函数环境变量的值
+    函数.__closure__[0].__cell_contents
+示例：
+def f1():
+    a=10;
+    def f2():
+        return a*10
+    return f2
 
+函数内部使用外部变量
+a=1
+def a():
+    global a
+    def b():
+        b=a+1
+        a=b
+
+方法2
+a=1
+def a():
+    def b():
+        nolocal a 
+        b=a+1
+        a=b
+
+
+2、匿名函数
+def add(x,y):
+    return x+y
+ 
+f=lamda x,y:x+y
+print(f(1,2))
+
+3、三元表达式
+x=2
+y=1
+如果x大于y，返回x,否则返回y
+ x if x>y else y
+'''
 # map函数
 # map()函数接收两个参数，一个是函数，一个是Iterable，map将传入的函数依次作用到序列的每个元素，并把结果作为新的Iterator返回。
 def f(x):
     return  x*x;
+
 
 r=map(f, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
 print(r);# <map object at 0x00000000021EC0F0>
 # map()传入的第一个参数是f，即函数对象本身。由于结果r是一个Iterator，Iterator是惰性序列，因此通过list()函数让它把整个序列都计算出来并返回一个list。
 print(list(r));# [1, 4, 9, 16, 25, 36, 49, 64, 81]
 print(list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9])))# ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+s=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+''' 匿名函数实现 '''
+r=map(lambda x:x*x ,s)
+
 
 # reduce函数
 # 必须接收两个参数，reduce把结果继续和序列的下一个元素做累积计算
@@ -26,6 +74,8 @@ from functools import reduce
 def fn(x,y):
     return  x*10+y;
 print(reduce(fn,[1,3,5,7,9]));# 13579
+''' 也可以用lamda表达式 '''
+reduce(lambda x,y:x+y,[1,3,5,7,9])
 
 # 如果考虑到字符串str也是一个序列，对上面的例子稍加改动，配合map()，我们就可以写出把str转换为int的函数
 def fn(x,y):
@@ -430,6 +480,9 @@ print(S);# [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
 
 
 # 装饰器
+''' 
+
+'''
 # 由于函数也是一个对象，而且函数对象可以被赋值给变量，所以，通过变量也能调用该函数。
 def now():
     print('2015-2-3');

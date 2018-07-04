@@ -7,6 +7,18 @@ __author__ = 'nyc'
 # 序列化与反序列化（pickle）
 # JSON
 
+''' 
+json:一种轻量级数据转换格式
+易于阅读
+易于解析
+网络传输效率高
+跨语言交换数据
+
+1、json字符串转换成python对应的对象（反序列化）
+    json.loads(str)
+2、序列化
+    json.dumps(object)
+'''
 # 在程序运行的过程中，所有的变量都是在内存中，比如，定义一个dict：
 d=dict(name='bob',age=20,score=100);
 # 可以随时修改变量，比如把name改成'Bill'，但是一旦程序结束，变量所占用的内存就被操作系统全部回收。
