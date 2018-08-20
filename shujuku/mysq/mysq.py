@@ -36,6 +36,8 @@ __author__ = 'nyc'
 import  mysql.connector
 # 注意把password设为你的root口令:
 conn=mysql.connector.connect(user='root',password='111111',database='test')
+# mysql 8.0 报错信息：Authentication plugin 'caching_sha2_password' is not supported
+# 解决方法：conn=mysql.connector.connect(user='root',password='111111',database='test',auth_plugin='mysql_native_password')
 cursor=conn.cursor();
 # 创建user表:
 
